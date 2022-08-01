@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
 
-public class TimeInterceptor  {
+public class TimeInterceptor {
 
     @RuntimeType
     public static Object intercept(@This Object obj, @AllArguments Object[] allArguments, @Origin Method method,
@@ -24,8 +24,8 @@ public class TimeInterceptor  {
 
                                    @SuperCall Callable<?> callable) throws Exception {
         initFlowRules();
-        Request request = (Request)allArguments[0];
-        Request.Options options = (Request.Options)allArguments[1];
+        Request request = (Request) allArguments[0];
+        Request.Options options = (Request.Options) allArguments[1];
         URI asUri = URI.create(request.url());
         String resourceName = asUri.getHost();
         Entry entry = null;
@@ -33,19 +33,19 @@ public class TimeInterceptor  {
         try {
             // 被保护的逻辑
             entry = SphU.entry(resourceName);
-             call = callable.call();
+            call = callable.call();
 
         } catch (BlockException ex) {
             // 处理被流控的逻辑
             System.out.println("blocked!");
-        }finally {
+        } finally {
             entry.exit();
             return call;
         }
 
     }
 
-    public static void initFlowRules(){
+    public static void initFlowRules() {
         List<FlowRule> rules = new ArrayList<>();
         FlowRule rule = new FlowRule("thclouds-company-service");
         // set limit qps to 20

@@ -24,30 +24,42 @@ import java.util.Properties;
 public class NacosDatasourceInitFunc implements InitFunc {
 
     @Override
-    public void init() throws Exception {
+    public void init() {
         System.out.println("NacosDatasourceInitFun init");
         Properties properties = new Properties();
         properties.put(PropertyKeyConst.SERVER_ADDR, Config.FeignRule.REMOVE_ADDRESS);
         properties.put(PropertyKeyConst.NAMESPACE, Config.FeignRule.NACOS_NAMESPACE_ID);
 
         //限流规则初始化
-        ReadableDataSource<String, List<FlowRule>> flowRuleDataSource = new NacosDataSource<>(properties, Config.FeignRule.GROUP_ID, Config.FeignRule.FLOW_DATA_ID,
-                source -> JSON.parseObject(source, new TypeReference<List<FlowRule>>() {
-                }));
-        FlowRuleManager.register2Property(flowRuleDataSource.getProperty());
+        try {
+            ReadableDataSource<String, List<FlowRule>> flowRuleDataSource = new NacosDataSource<>(properties, Config.FeignRule.GROUP_ID, Config.FeignRule.FLOW_DATA_ID,
+                    source -> JSON.parseObject(source, new TypeReference<List<FlowRule>>() {
+                    }));
+            FlowRuleManager.register2Property(flowRuleDataSource.getProperty());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         //降级规则初始化
-        ReadableDataSource<String, List<DegradeRule>>  degradeRuleDataSource = new NacosDataSource<>(properties, Config.FeignRule.GROUP_ID, Config.FeignRule.DEGRADE_DATA_ID,
-                source -> JSON.parseObject(source, new TypeReference<List<DegradeRule>>() {
-                }));
-        DegradeRuleManager.register2Property(degradeRuleDataSource.getProperty());
+        try {
+            ReadableDataSource<String, List<DegradeRule>> degradeRuleDataSource = new NacosDataSource<>(properties, Config.FeignRule.GROUP_ID, Config.FeignRule.DEGRADE_DATA_ID,
+                    source -> JSON.parseObject(source, new TypeReference<List<DegradeRule>>() {
+                    }));
+            DegradeRuleManager.register2Property(degradeRuleDataSource.getProperty());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         //系统保护规则初始化
-        ReadableDataSource<String, List<SystemRule>>  systemRuleDataSource = new NacosDataSource<>(properties, Config.FeignRule.GROUP_ID, Config.FeignRule.SYSTEM_DATA_ID,
-                source -> JSON.parseObject(source, new TypeReference<List<SystemRule>>() {
-                }));
-        SystemRuleManager.register2Property(systemRuleDataSource.getProperty());
+        try {
+            ReadableDataSource<String, List<SystemRule>> systemRuleDataSource = new NacosDataSource<>(properties, Config.FeignRule.GROUP_ID, Config.FeignRule.SYSTEM_DATA_ID,
+                    source -> JSON.parseObject(source, new TypeReference<List<SystemRule>>() {
+                    }));
+            SystemRuleManager.register2Property(systemRuleDataSource.getProperty());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         //访问控制规则
-
     }
 }

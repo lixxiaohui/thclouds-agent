@@ -6,11 +6,11 @@ package com.thclouds.agent.conf;
  */
 public class Config {
 
-    public static class Agent{
+    public static class Agent {
 
     }
 
-    public static class Logging{
+    public static class Logging {
         /**
          * 日志文件名称
          */
@@ -19,17 +19,17 @@ public class Config {
         /**
          * 存放目录，默认{gAgentJarDir}/logs
          */
-        public static String DIR ="";
+        public static String DIR = "";
 
     }
 
-    public static class FeignRule{
+    public static class FeignRule {
 
-        public static  String REMOVE_ADDRESS = "nacos.test.qy566.com:80";
+        public static String REMOVE_ADDRESS = "nacos.test.qy566.com:80";
         // nacos group
-        public static  String GROUP_ID = "DEFAULT_GROUP";
+        public static String GROUP_ID = "DEFAULT_GROUP";
 
-        public static  String NACOS_NAMESPACE_ID = "dev";
+        public static String NACOS_NAMESPACE_ID = "dev";
 
         public static final String FLOW_DATA_ID = "flow.rule";
 

@@ -18,7 +18,7 @@ package com.thclouds.agent.context;
 import com.alibaba.csp.sentinel.Entry;
 
 /**
- * @author wavesZh
+ * @author lixh
  */
 public class EntryHolder {
 

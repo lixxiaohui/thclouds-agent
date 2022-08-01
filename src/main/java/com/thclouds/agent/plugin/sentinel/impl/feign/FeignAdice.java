@@ -39,44 +39,39 @@ public class FeignAdice {
     public static <ParamFlowException> void enter(@Advice.Origin("#t") String className, @Advice.Origin("#m") String methodName, @Advice.AllArguments Object[] allArguments) throws Exception {
 //        initSystemRule();
 //        registerStateChangeObserver();
-        System.out.println(Thread.currentThread().getId()+"  className："+className + " methodName: "+methodName );
+        System.out.println(Thread.currentThread().getId() + "  className：" + className + " methodName: " + methodName);
 
-        Request request = (Request)allArguments[0];
-        Request.Options options = (Request.Options)allArguments[1];
+        Request request = (Request) allArguments[0];
+        Request.Options options = (Request.Options) allArguments[1];
         URI asUri = URI.create(request.url());
 //        String resourceName = asUri.getHost();
-        String resourceName = methodName+":"+asUri.getPath();
-        System.out.println(Thread.currentThread().getId()+"  参数：" + request.body()+  "   "+request.url()+"   "+ asUri.getHost() +"    "+asUri.getPath() );
+        String resourceName = methodName + ":" + asUri.getPath();
+        System.out.println(Thread.currentThread().getId() + "  参数：" + request.body() + "   " + request.url() + "   " + asUri.getHost() + "    " + asUri.getPath());
 
         Entry entry = null;
         try {
             //TODO 根据资源的来源判断
             // 被保护的逻辑
-            entry = SphU.entry(resourceName,EntryType.OUT);
+            entry = SphU.entry(resourceName, EntryType.OUT);
             //系统规则只对 IN 生效
 //            entry = SphU.entry("methodA", EntryType.IN);
-            System.out.println(Thread.currentThread().getId()+"  enter");
+            System.out.println(Thread.currentThread().getId() + "  enter");
+        } catch (FlowException e) {
+            System.out.println(Thread.currentThread().getId() + "限流: " + e);
+            throw new RuntimeException("BlockException 系统限流了，请稍后再试!");
+        } catch (DegradeException e) {
+            System.out.println(Thread.currentThread().getId() + "降级" + e.getRule());
+            throw new RuntimeException("BlockException 系统降级了，请稍后再试!");
+        } catch (SystemBlockException e) {
+            System.out.println(Thread.currentThread().getId() + "系统规则(负载/...不满足要求)" + e);
+            throw new RuntimeException("BlockException 系统规则(负载/...不满足要求)");
+        } catch (AuthorityException e) {
+            System.out.println(Thread.currentThread().getId() + "授权规则不通过" + e);
+            throw new RuntimeException("BlockException 授权规则不通过");
         } catch (Exception ex) {
-            System.out.println(Thread.currentThread().getId()+"  block : "+ ex.getClass());
-            if (ex instanceof FlowException) {
-                System.out.println(Thread.currentThread().getId()+"限流: "+ ex);
-                throw new RuntimeException("BlockException 系统限流了，请稍后再试!");
-            } else if (ex instanceof DegradeException) {
-
-                System.out.println(Thread.currentThread().getId()+"降级"+  ((DegradeException) ex).getRule());
-                throw new RuntimeException("BlockException 系统降级了，请稍后再试!");
-            } else if (ex instanceof SystemBlockException) {
-                System.out.println(Thread.currentThread().getId()+"系统规则(负载/...不满足要求)"+ex);
-                throw new RuntimeException("BlockException 系统规则(负载/...不满足要求)");
-            } else if (ex instanceof AuthorityException) {
-                System.out.println(Thread.currentThread().getId()+"授权规则不通过" + ex);
-                throw new RuntimeException("BlockException 授权规则不通过");
-            }
-
             throw new RuntimeException("BlockException");
-            // 处理被流控的逻
         }
-        EntryContext.putEntryHolder(new EntryHolder(entry,null));
+        EntryContext.putEntryHolder(new EntryHolder(entry, null));
     }
 
 
@@ -84,14 +79,14 @@ public class FeignAdice {
     public static void exit(@Advice.Origin("#t") String className,
                             @Advice.Origin("#m") String methodName, @Advice.Thrown Throwable e) {
 
-        if (e!=null && !BlockException.isBlockException(e)) {
+        if (e != null && !BlockException.isBlockException(e)) {
             Tracer.trace(e);
         }
         EntryHolder entryHolder = EntryContext.getEntryHolder();
-        System.out.println(Thread.currentThread().getId()+" entryHolder：" + entryHolder);
-        if (null !=  entryHolder){
+        System.out.println(Thread.currentThread().getId() + " entryHolder：" + entryHolder);
+        if (null != entryHolder) {
             entryHolder.getEntry().exit();
-            System.out.println(Thread.currentThread().getId()+"  method exit");
+            System.out.println(Thread.currentThread().getId() + "  method exit");
         }
 
     }
@@ -110,7 +105,7 @@ public class FeignAdice {
                 });
     }
 
-    public static void initFlowRules(){
+    public static void initFlowRules() {
         if (FlowRuleManager.getRules().isEmpty()) {
             List<FlowRule> rules = new ArrayList<>();
             FlowRule rule = new FlowRule("thclouds-company-service");
@@ -125,7 +120,7 @@ public class FeignAdice {
     }
 
 
-    public  static void initDegradeRule() {
+    public static void initDegradeRule() {
         if (DegradeRuleManager.getRules().isEmpty()) {
             List<DegradeRule> rules = new ArrayList<>();
             DegradeRule rule = new DegradeRule("thclouds-company-service")

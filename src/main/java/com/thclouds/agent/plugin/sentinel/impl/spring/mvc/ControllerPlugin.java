@@ -23,6 +23,7 @@ public class ControllerPlugin implements IPlugin {
                     public ElementMatcher<TypeDescription> buildTypesMatcher() {
                         return ElementMatchers.isAnnotatedWith(RestController.class).or(ElementMatchers.isAnnotatedWith(Controller.class));
                     }
+
                     @Override
                     public ElementMatcher<MethodDescription> buildMethodsMatcher() {
                         return ElementMatchers

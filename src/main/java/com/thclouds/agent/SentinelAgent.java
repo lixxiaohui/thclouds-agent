@@ -11,6 +11,7 @@ import net.bytebuddy.description.type.TypeDescription;
 import net.bytebuddy.dynamic.DynamicType;
 import net.bytebuddy.matcher.ElementMatchers;
 import net.bytebuddy.utility.JavaModule;
+
 import java.lang.instrument.Instrumentation;
 import java.util.List;
 import java.util.logging.LogManager;
@@ -19,7 +20,7 @@ import static net.bytebuddy.matcher.ElementMatchers.nameContains;
 import static net.bytebuddy.matcher.ElementMatchers.nameStartsWith;
 
 public class SentinelAgent {
-//    private static ILog LOGGER = LogManager.getLogger(SentinelAgent.class);
+    //    private static ILog LOGGER = LogManager.getLogger(SentinelAgent.class);
     //JVM 首先尝试在代理类上调用以下方法
     public static void premain(String agentArgs, Instrumentation inst) {
         System.out.println("============================agnent 开启========================== == ==\r\n");
@@ -36,7 +37,7 @@ public class SentinelAgent {
                         .or(nameContains(".asm."))
                         .or(nameContains(".reflectasm."))
                         .or(nameStartsWith("sun.reflect"))
-                        .or(ElementMatchers.<TypeDescription>isSynthetic()));
+                        .or(ElementMatchers.isSynthetic()));
 
         for (IPlugin plugin : pluginGroup) {
             InterceptPoint[] interceptPoints = plugin.buildInterceptPoint();
@@ -51,7 +52,7 @@ public class SentinelAgent {
 
         //and(ElementMatchers."org.springframework.cloud.openfeign.ribbon.LoadBalancerFeignClient")) // 拦截任意方法
 
-            //监听
+        //监听
         AgentBuilder.Listener listener = new AgentBuilder.Listener() {
             @Override
             public void onDiscovery(String s, ClassLoader classLoader, JavaModule javaModule, boolean b) {
@@ -72,7 +73,7 @@ public class SentinelAgent {
             public void onError(String s, ClassLoader classLoader,
                                 JavaModule javaModule, boolean b, Throwable throwable) {
                 throwable.printStackTrace();
-                System.err.println("onerror：" + s+"      "+throwable.getMessage());
+                System.err.println("onerror：" + s + "      " + throwable.getMessage());
             }
 
             @Override
@@ -86,10 +87,6 @@ public class SentinelAgent {
         //启动监控服务
         //停机回调
     }
-
-
-
-
 
 
 }

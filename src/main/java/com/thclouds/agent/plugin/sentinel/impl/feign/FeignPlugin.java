@@ -23,17 +23,19 @@ public class FeignPlugin implements IPlugin {
 //                                .or(ElementMatchers.nameStartsWith("com.thclouds.commons.base.request.intercepter.FeignRequestInterceptor"))
                                 ;
                     }
+
                     @Override
                     public ElementMatcher<MethodDescription> buildMethodsMatcher() {
                         return ElementMatchers.isMethod()
-                                  .and(ElementMatchers.any())
-                                  .and(ElementMatchers.nameStartsWith("execute"))
+                                .and(ElementMatchers.any())
+                                .and(ElementMatchers.nameStartsWith("execute"))
 //                                .or(ElementMatchers.nameStartsWith("apply"))
                                 ;
                     }
                 }
         };
     }
+
     @Override
     public Class adviceClass() {
         return FeignAdice.class;
