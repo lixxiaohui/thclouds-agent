@@ -1,0 +1,3 @@
+com.thclouds.agent.plugin.sentinel.rule.NacosDatasourceInitFunc
+com.alibaba.csp.sentinel.transport.init.CommandCenterInitFunc
+com.alibaba.csp.sentinel.transport.init.HeartbeatSenderInitFunc
