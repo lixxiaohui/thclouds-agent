@@ -5,7 +5,9 @@ public final class EntryContext {
     private static final ThreadLocal<EntryHolder> holderThreadLocal = new ThreadLocal<EntryHolder>();
 
     public static EntryHolder getEntryHolder(){
-        return holderThreadLocal.get();
+        EntryHolder entryHolder = holderThreadLocal.get();
+        holderThreadLocal.remove();
+        return entryHolder;
     }
 
     public static void putEntryHolder(EntryHolder entryHolder){

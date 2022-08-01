@@ -16,6 +16,8 @@
         <feign.version>9.5.0</feign.version>
         <slf4j.version>1.7.25</slf4j.version>
         <sentinel.version>1.8.4</sentinel.version>
+        <spring-core.version>5.0.0.RELEASE</spring-core.version>
+        <spring-webmvc.version>5.0.0.RELEASE</spring-webmvc.version>
     </properties>
 
     <dependencies>
@@ -76,6 +78,19 @@
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
             <version>${slf4j.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-core</artifactId>
+            <version>${spring-core.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-webmvc</artifactId>
+            <version>${spring-webmvc.version}</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
     <build>

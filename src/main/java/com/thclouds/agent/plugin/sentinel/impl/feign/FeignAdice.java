@@ -32,7 +32,7 @@ import java.util.Collections;
 import java.util.List;
 
 
-public class SentinelFeignAdice {
+public class FeignAdice {
 
 
     @Advice.OnMethodEnter()
@@ -53,9 +53,7 @@ public class SentinelFeignAdice {
             //TODO 根据资源的来源判断
             // 被保护的逻辑
             entry = SphU.entry(resourceName,EntryType.OUT);
-
-//            entry = SphU.entry(resourceName, EntryType.IN);
-
+            //系统规则只对 IN 生效
 //            entry = SphU.entry("methodA", EntryType.IN);
             System.out.println(Thread.currentThread().getId()+"  enter");
         } catch (Exception ex) {
@@ -126,10 +124,6 @@ public class SentinelFeignAdice {
         }
     }
 
-//    public static void main(String[] args) {
-//        initFlowRules();
-//        System.out.println(JSON.toJSON(FlowRuleManager.getRules()).toString());
-//    }
 
     public  static void initDegradeRule() {
         if (DegradeRuleManager.getRules().isEmpty()) {

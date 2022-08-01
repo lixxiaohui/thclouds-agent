@@ -11,11 +11,10 @@ public class Config {
     }
 
     public static class Logging{
-
         /**
          * 日志文件名称
          */
-        public static String FILE_NAME = "skywalking-api.log";
+        public static String FILE_NAME = "thclouds-api.log";
 
         /**
          * 存放目录，默认{gAgentJarDir}/logs
@@ -35,6 +34,8 @@ public class Config {
         public static final String FLOW_DATA_ID = "flow.rule";
 
         public static final String DEGRADE_DATA_ID = "degrade.rule";
+
+        public static final String SYSTEM_DATA_ID = "system.rule";
 
 
     }

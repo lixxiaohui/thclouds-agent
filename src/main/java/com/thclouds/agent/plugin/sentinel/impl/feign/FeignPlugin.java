@@ -7,7 +7,7 @@ import net.bytebuddy.description.type.TypeDescription;
 import net.bytebuddy.matcher.ElementMatcher;
 import net.bytebuddy.matcher.ElementMatchers;
 
-public class SentinelFeignPlugin implements IPlugin {
+public class FeignPlugin implements IPlugin {
     @Override
     public String name() {
         return "SentinelFeign";
@@ -36,7 +36,7 @@ public class SentinelFeignPlugin implements IPlugin {
     }
     @Override
     public Class adviceClass() {
-        return SentinelFeignAdice.class;
+        return FeignAdice.class;
     }
 
 }

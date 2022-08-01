@@ -1,6 +1,7 @@
 package com.thclouds.agent;
 
 
+import com.thclouds.agent.conf.ConfigInitializer;
 import com.thclouds.agent.plugin.IPlugin;
 import com.thclouds.agent.plugin.InterceptPoint;
 import com.thclouds.agent.plugin.PluginFactory;
@@ -23,10 +24,10 @@ public class SentinelAgent {
     public static void premain(String agentArgs, Instrumentation inst) {
         System.out.println("============================agnent 开启========================== == ==\r\n");
         //TODO 1、添加配置文件和参数解析
-        //2、加载插件
-        //3、字节码插装
+        ConfigInitializer.initializeCoreConfig(agentArgs);
+        //2、加载插件  TODO 根据配置加载插件
         List<IPlugin> pluginGroup = PluginFactory.pluginGroup;
-//        AgentBuilder agentBuilder = new AgentBuilder.Default().with(AgentBuilder.LambdaInstrumentationStrategy.ENABLED);
+        //3、字节码插装  TODO看看是不是可以通过环绕加强
         AgentBuilder agentBuilder = new AgentBuilder.Default().ignore(
                 nameStartsWith("net.bytebuddy.")
                         .or(nameStartsWith("org.slf4j."))
@@ -42,19 +43,9 @@ public class SentinelAgent {
             for (InterceptPoint point : interceptPoints) {
                 AgentBuilder.Transformer transformer = (builder, typeDescription, classLoader, javaModule) -> {
                     builder = builder.visit(Advice.to(plugin.adviceClass()).on(point.buildMethodsMatcher()));
-                    ; // 委托
                     return builder;
                 };
                 agentBuilder = agentBuilder.type(point.buildTypesMatcher()).transform(transformer);
-//                agentBuilder = agentBuilder.type(point.buildTypesMatcher()).transform(transformer).asTerminalTransformation();
-//                AgentBuilder.Transformer transformer2 = (newClassBuilder, typeDescription, classLoader, javaModule) -> {
-//                    newClassBuilder = newClassBuilder.method(point.buildMethodsMatcher())
-//                            .intercept(MethodDelegation.withDefaultConfiguration()
-//                                    .to(MethodDelegation.to(TimeInterceptor.class)));
-//
-//                    return newClassBuilder;
-//                };
-//                agentBuilder = agentBuilder.type(point.buildTypesMatcher()).transform(transformer2);
             }
         }
 
@@ -80,6 +71,7 @@ public class SentinelAgent {
             @Override
             public void onError(String s, ClassLoader classLoader,
                                 JavaModule javaModule, boolean b, Throwable throwable) {
+                throwable.printStackTrace();
                 System.err.println("onerror：" + s+"      "+throwable.getMessage());
             }
 
